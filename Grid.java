@@ -28,7 +28,7 @@ public class Grid {
 		while (i<=nbLignes-1 && pieces[colonne+(i*nbColonnes)] == 0) {
 			i++;
 		}
-		if(i>0){
+		if(i>0){ // on place la piece à la ligne qui précéde i, donc i au moins 1
 			pieces[colonne+((i-1)*nbColonnes)] = joueur;	
 		}
 		
@@ -43,8 +43,10 @@ public class Grid {
 		int caseCourante = empCase+nbColonnes;
 		int cpt = 1;
 
-		if ((nbLignes-1)-(empCase / nbColonnes) > 2) {
-			while (cpt < 4 && pieces[caseCourante] == joueur) {
+		if ((nbLignes-1)-(empCase / nbColonnes) > 2) { // il faut qu'il y ait au moins 2 cases qui séparent la
+														// dernière case jouée de la dernière ligne
+			while (cpt < 4 && pieces[caseCourante] == joueur) { // tant qu'on a pas atteint un compteur de 4
+																// ou que la case courante est une pièce du joueur courant
 				cpt++;
 				caseCourante += nbColonnes;
 			}
