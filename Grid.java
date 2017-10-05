@@ -1,8 +1,8 @@
 import java.lang.StringBuilder;
 
 public class Grid {
-	final private static int nbColonnes = 7;
-	final private static int nbLignes = 6;
+	final private static int NBCOLONNES = 7;
+	final private static int NBLIGNES = 6;
 
 
 	//pieces est le tableau représentant la grille de jeu 
@@ -25,34 +25,49 @@ public class Grid {
 	public int jouerCoup(int joueur, int colonne){
 		int i = 0;
 		//on parcours les cellules vide de la grille pour recuperer l'indice de de la première case libre de la colonne joué
-		while (i<=nbLignes-1 && pieces[colonne+(i*nbColonnes)] == 0) {
+		while (i<=NBLIGNES-1 && pieces[colonne+(i*NBCOLONNES)] == 0) {
 			i++;
 		}
 		if(i>0){ // on place la piece à la ligne qui précéde i, donc i au moins 1
-			pieces[colonne+((i-1)*nbColonnes)] = joueur;	
+			pieces[colonne+((i-1)*NBCOLONNES)] = joueur;	
 		}
 		
-		return colonne+((i-1)*nbColonnes);
+		return colonne+((i-1)*NBCOLONNES);
 	}
 
 	public boolean estFinal(int joueur, int empCase){
-		return analyseVerticale(joueur, empCase);
+		return analyseVerticale(joueur, empCase) || analyseHorizontale(joueur, empCase);
 	}
 
 	public boolean analyseVerticale(int joueur, int empCase){
-		int caseCourante = empCase+nbColonnes;
+		int caseCourante = empCase+NBCOLONNES;
 		int cpt = 1;
 
-		if ((nbLignes-1)-(empCase / nbColonnes) > 2) { // il faut qu'il y ait au moins 2 cases qui séparent la
+		if ((NBLIGNES-1)-(empCase / NBCOLONNES) > 2) { // il faut qu'il y ait au moins 2 cases qui séparent la
 														// dernière case jouée de la dernière ligne
 			while (cpt < 4 && pieces[caseCourante] == joueur) { // tant qu'on a pas atteint un compteur de 4
 																// ou que la case courante est une pièce du joueur courant
 				cpt++;
-				caseCourante += nbColonnes;
+				caseCourante += NBCOLONNES;
 			}
 		}
 		return cpt==4;
 
+	}
+
+	public boolean analyseHorizontale(int joueur, int empCase){
+		int caseCourante = empCase+NBCOLONNES;
+		int cpt = 1;
+
+		if ((NBCOLONNES-1)-(empCase / NBCOLONNES) > 2) { // il faut qu'il y ait au moins 2 cases qui séparent la
+														// dernière case jouée de la dernière ligne
+			while (cpt < 4 && pieces[caseCourante] == joueur) { // tant qu'on a pas atteint un compteur de 4
+																// ou que la case courante est une pièce du joueur courant
+				cpt++;
+				caseCourante += NBCOLONNES;
+			}
+		}
+		return cpt==4;
 	}
 
 	@Override
@@ -61,7 +76,7 @@ public class Grid {
 		for(int i=0;i<this.pieces.length;i++){
 
 			builder.append(""+pieces[i]);
-			if((i+1)%nbColonnes==0){
+			if((i+1)%NBCOLONNES==0){
 				builder.append("\n");
 			}
 		}

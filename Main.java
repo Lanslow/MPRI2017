@@ -25,31 +25,48 @@ public class Main{
 		System.out.println("J1 joue en colonne 4");
 		g.jouerCoup(3);
 		System.out.println(g.toString());
-
-		System.out.println("J2 joue en colonne 3");
-		g.jouerCoup(2);
-		System.out.println(g.toString());
-
-		System.out.println("J1 joue en colonne 4");
-		g.jouerCoup(3);
-		System.out.println(g.toString());
-
-		System.out.println("J2 joue en colonne 2");
-		g.jouerCoup(1);
-		System.out.println(g.toString());
-
-		System.out.println("J1 joue en colonne 4");
-		g.jouerCoup(3);
-		System.out.println(g.toString());
-
-		System.out.println("J2 joue en colonne 2");
-		g.jouerCoup(1);
-		System.out.println(g.toString());
-
-		System.out.println("J1 joue en colonne 4");
-		g.jouerCoup(3);
-		System.out.println(g.toString());
-
 		System.out.println(g.estFinal());
+
+		System.out.println("J2 joue en colonne 4");
+		g.jouerCoup(3);
+		System.out.println(g.toString());
+		if (!g.estFinal()) {
+			g.changementJoueur();
+		}
+
+		System.out.println("J1 joue en colonne 4");
+		g.jouerCoup(3);
+		System.out.println(g.toString());
+		if (!g.estFinal()) {
+			g.changementJoueur();
+		}
+
+		System.out.println("J2 joue en colonne 2");
+		g.jouerCoup(1);
+		System.out.println(g.toString());
+		if (!g.estFinal()) {
+			g.changementJoueur();
+		}
+
+		System.out.println("J1 joue en colonne 4");
+		g.jouerCoup(3);
+		System.out.println(g.toString());
+		if (!g.estFinal()) {
+			g.changementJoueur();
+		}
+
+		System.out.println("J2 joue en colonne 2");
+		g.jouerCoup(1);
+		System.out.println(g.toString());
+		if (!g.estFinal()) {
+			g.changementJoueur();
+		}
+
+		System.out.println("J1 joue en colonne 4");
+		g.jouerCoup(3);
+		System.out.println(g.toString());
+		if (!g.estFinal()) {
+			g.changementJoueur();
+		}
 	}
 }
