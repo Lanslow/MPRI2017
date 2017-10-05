@@ -18,14 +18,14 @@ public class Game{
 		nbDePieces++;
 	}
 
-	public changementJoueur() {
+	public void changementJoueur() {
 		this.joueurActuel=((joueurActuel-1)^1)+1;
 	}
 
 	public boolean estFinal() {
 		boolean res = false;
 
-		if (nbDePieces > 7) { // au moins une case a été jouée
+		if (nbDePieces > 6) { // au moins une case a été jouée
 			res = grilleActuel.estFinal(joueurActuel, emplacementDernierePiece);
 		}
 

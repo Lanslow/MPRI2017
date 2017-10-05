@@ -56,18 +56,21 @@ public class Grid {
 	}
 
 	public boolean analyseHorizontale(int joueur, int empCase){
-		int caseCourante = empCase+NBCOLONNES;
-		int cpt = 1;
-
-		if ((NBCOLONNES-1)-(empCase / NBCOLONNES) > 2) { // il faut qu'il y ait au moins 2 cases qui séparent la
-														// dernière case jouée de la dernière ligne
-			while (cpt < 4 && pieces[caseCourante] == joueur) { // tant qu'on a pas atteint un compteur de 4
-																// ou que la case courante est une pièce du joueur courant
+		int ligne =empCase/NBCOLONNES;
+		
+		int caseCourante=ligne*NBCOLONNES; 				// on initialise la case courante à la première case de la ligne de la case joué
+		int cpt=0;										//le compteur de jeton est initilisé à 0
+		while(caseCourante<NBCOLONNES*(ligne+1) && (cpt < 4) ){	// tant que l'indice de la case courante est infèrieur à l"indice de la derniere case de la ligne
+			if(pieces[caseCourante] == joueur){					//si la case courante à été joué par le joueur qui vient de jouer on incrémente le compteur
 				cpt++;
-				caseCourante += NBCOLONNES;
+			}else{												//sinon on le réinitialise
+				cpt=0;
 			}
+			
+			caseCourante += 1;							
 		}
 		return cpt==4;
+		
 	}
 
 	@Override
