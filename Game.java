@@ -9,23 +9,36 @@ public class Game{
 		joueurActuel=1;
 	}
 
+	@Override
 	public String toString(){
 		return grilleActuel.toString();
 	}
 
-	public void jouerCoup(int colonne){
+	public int jouerCoup(int colonne){
 		emplacementDernierePiece = this.grilleActuel.jouerCoup(joueurActuel,colonne);
-		nbDePieces++;
+
+		if (emplacementDernierePiece != -1) {
+			nbDePieces++;
+		}
+
+		return emplacementDernierePiece;
 	}
 
-	public changementJoueur() {
+	public void changementJoueur() {
 		this.joueurActuel=((joueurActuel-1)^1)+1;
+	}
+
+	public int joueurGagnant() {
+		if (nbDePieces==(Grid.getNbColonnes()*Grid.getNbLignes()))
+			return 0;
+
+		return joueurActuel;
 	}
 
 	public boolean estFinal() {
 		boolean res = false;
 
-		if (nbDePieces > 7) { // au moins une case a été jouée
+		if (nbDePieces > 6) { // au moins 7 cases ont jouées (ex : le premier joueur gagne au bout de son 4 coup, cela fait donc 7 coups)
 			res = grilleActuel.estFinal(joueurActuel, emplacementDernierePiece);
 		}
 
