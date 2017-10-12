@@ -9,6 +9,10 @@ public class Game{
 		joueurActuel=1;
 	}
 
+	public int getJoueurActuel() {
+		return joueurActuel;
+	}
+
 	@Override
 	public String toString(){
 		return grilleActuel.toString();
@@ -38,7 +42,7 @@ public class Game{
 	public boolean estFinal() {
 		boolean res = false;
 
-		if (nbDePieces > 6) { // au moins 7 cases ont jouées (ex : le premier joueur gagne au bout de son 4 coup, cela fait donc 7 coups)
+		if (nbDePieces > 6) { // au moins 7 cases ont jouées (ex : le premier joueur gagne au bout de son 4ème coup, cela fait donc 7 coups)
 			res = grilleActuel.estFinal(joueurActuel, emplacementDernierePiece);
 		}
 

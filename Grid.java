@@ -1,4 +1,5 @@
 import java.lang.StringBuilder;
+import java.lang.Math;
 
 public class Grid {
 	final private static int NBCOLONNES = 7;
@@ -49,9 +50,8 @@ public class Grid {
 	* empCase permet de ne regarder que autour du dernier jeton joué, au lieu de toute la grille
 	*/
 	public boolean estFinal(int joueur, int empCase){
-		return analyseVerticale(joueur, empCase);
+		return analyseVerticale(joueur, empCase) || analyseHorizontale(joueur, empCase) || analyseDiagonaleDescendante(joueur, empCase) || analyseDiagonaleMontante(joueur, empCase);
 	}
-
 	public boolean analyseVerticale(int joueur, int empCase){
 		int caseCourante = empCase+NBCOLONNES;
 		int cpt = 1;
@@ -82,8 +82,110 @@ public class Grid {
 			
 			caseCourante += 1;							
 		}
+
 		return cpt==4;
-		
+	}
+
+	public boolean analyseDiagonaleDescendante(int joueur, int empCase) {
+		int cpt = 1;
+
+		// Cases accessibles en diagonale en allant vers le haut-gauche
+		// et vers le bas-droit
+
+		// Minimum entre le nombre de lignes restantes (vers le bas ou vers le haut)
+		// et le nombre de colonnes restantes (vers la gauche ou vers la droite)
+		int nbDiagonalesGaucheAFaire = Math.min(empCase/NBCOLONNES, empCase%NBCOLONNES); 
+		int nbDiagonalesDroiteAFaire = Math.min(NBLIGNES-(empCase/NBCOLONNES)-1, NBCOLONNES-(empCase%NBCOLONNES)-1); 
+
+		boolean continuerParcoursGauche = true, continuerParcoursDroite = true;
+		int caseCouranteGauche = empCase, caseCouranteDroite = empCase;
+
+		while (cpt < 4 && (continuerParcoursGauche || continuerParcoursDroite)) { // Il est possible qu'on arrête un parcours diagonale
+																			// si on croise la pièce du joueur adversaire
+			caseCouranteGauche -= NBCOLONNES-1; // case suivante diagonale haut-gauche
+			caseCouranteDroite += NBCOLONNES+1; // case suivante diagonale bas-droit
+
+			if (continuerParcoursGauche) {
+				if (nbDiagonalesGaucheAFaire <= 0) { // Il n'y a plus de case en diagonale haut-gauche possible
+					continuerParcoursGauche = false;
+				} else {
+					if (pieces[caseCouranteGauche] != joueur) { // la case est adverse ou vide
+						continuerParcoursGauche = false;
+					} else {
+						nbDiagonalesGaucheAFaire--;
+						cpt++;
+
+					}
+				}
+			}
+
+			if (continuerParcoursDroite) {
+				if (nbDiagonalesDroiteAFaire <= 0) { // Il n'y a plus de case en diagonale bas-droit possible
+					continuerParcoursDroite = false;
+				} else {
+					if (pieces[caseCouranteDroite] != joueur) { // la case est adverse ou vide
+						continuerParcoursDroite = false;
+					} else {
+						nbDiagonalesDroiteAFaire--;
+						cpt++;
+			
+					}
+				}
+			}
+		}
+
+		return cpt==4;
+	}
+
+		public boolean analyseDiagonaleMontante(int joueur, int empCase) {
+		int cpt = 1;
+
+		// Cases accessibles en diagonale en allant vers le haut-gauche
+		// et vers le bas-droit
+
+		// Minimum entre le nombre de lignes restantes (vers le bas ou vers le haut)
+		// et le nombre de colonnes restantes (vers la gauche ou vers la droite)
+		int nbDiagonalesDroiteAFaire = Math.min(empCase/NBCOLONNES, NBCOLONNES-(empCase%NBCOLONNES)-1); 
+		int nbDiagonalesGaucheAFaire = Math.min(NBLIGNES-(empCase/NBCOLONNES)-1, empCase%NBCOLONNES); 
+
+		boolean continuerParcoursGauche = true, continuerParcoursDroite = true;
+		int caseCouranteGauche = empCase, caseCouranteDroite = empCase;
+
+		while (cpt < 4 && (continuerParcoursGauche || continuerParcoursDroite)) { // Il est possible qu'on arrête un parcours diagonale
+																			// si on croise la pièce du joueur adversaire
+			caseCouranteGauche += NBCOLONNES-1; // case suivante diagonale bas-gauche
+			caseCouranteDroite -= NBCOLONNES+1; // case suivante diagonale haut-droit
+
+			if (continuerParcoursGauche) {
+				if (nbDiagonalesGaucheAFaire <= 0) { // Il n'y a plus de case en diagonale haut-gauche possible
+					continuerParcoursGauche = false;
+				} else {
+					if (pieces[caseCouranteGauche] != joueur) { // la case est adverse ou vide
+						continuerParcoursGauche = false;
+					} else {
+						nbDiagonalesGaucheAFaire--;
+						cpt++;
+
+					}
+				}
+			}
+
+			if (continuerParcoursDroite) {
+				if (nbDiagonalesDroiteAFaire <= 0) { // Il n'y a plus de case en diagonale bas-droit possible
+					continuerParcoursDroite = false;
+				} else {
+					if (pieces[caseCouranteDroite] != joueur) { // la case est adverse ou vide
+						continuerParcoursDroite = false;
+					} else {
+						nbDiagonalesDroiteAFaire--;
+						cpt++;
+			
+					}
+				}
+			}
+		}
+
+		return cpt==4;
 	}
 
 	@Override

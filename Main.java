@@ -85,15 +85,17 @@ public class Main{
 		while (continuer) {
 			mauvaisCoup = true;
 
-			while (mauvaisCoup) {
+			System.out.println("\nC'est au joueur " + g.getJoueurActuel() + " de jouer !\n");
+
+			while (mauvaisCoup) { // Tant que l'entrée du clavier est mauvaise, redemander
 				System.out.println("Sur quelle colonne voulez-vous jouer?");
 				int i = input.nextInt();
-				if (i < 1 || i > 7) {
+				if (i < 1 || i > 7) { // La valeur entrée n'est pas comprise entre 1 et 7
 					System.out.println("Valeur de colonne invalide, la valeur doit être comprise entre 1 et 7");
 				} else {
-					if (g.jouerCoup(i-1) == -1) {
+					if (g.jouerCoup(i-1) == -1) { // La colonne choisie est pleine
 						System.out.println("Cette colonne est remplie et ne peut pas être jouée : choisissez une autre colonne");
-					} else {
+					} else { // La colonne choisie est possible
 						System.out.println(g.toString());
 						mauvaisCoup = false;
 						if (g.estFinal()) {
