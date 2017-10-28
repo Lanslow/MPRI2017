@@ -1,9 +1,12 @@
 import java.lang.StringBuilder;
 import java.lang.Math;
+import java.util.ArrayList;
 
-public class Grid {
+public class Grille {
 	final private static int NBCOLONNES = 7;
 	final private static int NBLIGNES = 6;
+
+	private int emplacementDernierePiece = -1;
 
 	public static int getNbColonnes() {
 		return NBCOLONNES;
@@ -18,13 +21,32 @@ public class Grid {
 	//0 vide
 	//1 joueur 1 jaune
 	//2 joueur 2 rouge
-	private int[] pieces = new int[42];
+	private int[] pieces = new int[NBCOLONNES*NBLIGNES];
 	
 
-	public Grid() {
+	public Grille() {
 		for (int i =0;i<this.pieces.length;i++){
 			this.pieces[i]=0;					//la grille de départ est vide
 		}
+	}
+
+	public Grille(Grille g) {
+		for (int i = 0; i<this.pieces.length; i++) {
+			this.pieces[i] = g.getPiece(i);
+		}
+		emplacementDernierePiece = g.getEmplacementDernierePiece();
+	}
+
+	public int getPiece(int i) {
+		return pieces[i];
+	}
+
+	public void setEmplacementDernierePiece(int empPiece) {
+		emplacementDernierePiece = empPiece;
+	}
+
+	public int getEmplacementDernierePiece() {
+		return emplacementDernierePiece;
 	}
 
 	/**
@@ -39,24 +61,25 @@ public class Grid {
 			i++;
 		}
 		if(i>0){ // on place la piece à la ligne qui précéde i, donc i au moins 1
-			pieces[colonne+((i-1)*NBCOLONNES)] = joueur;
 			valeur = colonne+((i-1)*NBCOLONNES);
+			pieces[valeur] = joueur;
+			emplacementDernierePiece = valeur;
 		}
 		
 		return valeur;
 	}
 
 	/**
-	* empCase permet de ne regarder que autour du dernier jeton joué, au lieu de toute la grille
+	* emplacementDernierePiece permet de ne regarder que autour du dernier jeton joué, au lieu de toute la grille
 	*/
-	public boolean estFinal(int joueur, int empCase){
-		return analyseVerticale(joueur, empCase) || analyseHorizontale(joueur, empCase) || analyseDiagonaleDescendante(joueur, empCase) || analyseDiagonaleMontante(joueur, empCase);
+	public boolean estFinal(int joueur){
+		return analyseVerticale(joueur) || analyseHorizontale(joueur) || analyseDiagonaleDescendante(joueur) || analyseDiagonaleMontante(joueur);
 	}
-	public boolean analyseVerticale(int joueur, int empCase){
-		int caseCourante = empCase+NBCOLONNES;
+	public boolean analyseVerticale(int joueur){
+		int caseCourante = emplacementDernierePiece+NBCOLONNES;
 		int cpt = 1;
 
-		if ((NBLIGNES-1)-(empCase / NBCOLONNES) > 2) { // il faut qu'il y ait au moins 2 cases qui séparent la
+		if ((NBLIGNES-1)-(emplacementDernierePiece / NBCOLONNES) > 2) { // il faut qu'il y ait au moins 2 cases qui séparent la
 														// dernière case jouée de la dernière ligne
 			while (cpt < 4 && pieces[caseCourante] == joueur) { // tant qu'on a pas atteint un compteur de 4
 																// ou que la case courante est une pièce du joueur courant
@@ -68,8 +91,8 @@ public class Grid {
 
 	}
 
-	public boolean analyseHorizontale(int joueur, int empCase){
-		int ligne =empCase/NBCOLONNES;
+	public boolean analyseHorizontale(int joueur){
+		int ligne =emplacementDernierePiece/NBCOLONNES;
 		
 		int caseCourante=ligne*NBCOLONNES; 				// on initialise la case courante à la première case de la ligne de la case joué
 		int cpt=0;										//le compteur de jeton est initilisé à 0
@@ -86,7 +109,7 @@ public class Grid {
 		return cpt==4;
 	}
 
-	public boolean analyseDiagonaleDescendante(int joueur, int empCase) {
+	public boolean analyseDiagonaleDescendante(int joueur) {
 		int cpt = 1;
 
 		// Cases accessibles en diagonale en allant vers le haut-gauche
@@ -94,16 +117,19 @@ public class Grid {
 
 		// Minimum entre le nombre de lignes restantes (vers le bas ou vers le haut)
 		// et le nombre de colonnes restantes (vers la gauche ou vers la droite)
-		int nbDiagonalesGaucheAFaire = Math.min(empCase/NBCOLONNES, empCase%NBCOLONNES); 
-		int nbDiagonalesDroiteAFaire = Math.min(NBLIGNES-(empCase/NBCOLONNES)-1, NBCOLONNES-(empCase%NBCOLONNES)-1); 
+		int nbDiagonalesGaucheAFaire = Math.min(emplacementDernierePiece/NBCOLONNES, emplacementDernierePiece%NBCOLONNES); 
+		int nbDiagonalesDroiteAFaire = Math.min(NBLIGNES-(emplacementDernierePiece/NBCOLONNES)-1, NBCOLONNES-(emplacementDernierePiece%NBCOLONNES)-1); 
 
 		boolean continuerParcoursGauche = true, continuerParcoursDroite = true;
-		int caseCouranteGauche = empCase, caseCouranteDroite = empCase;
+		int caseCouranteGauche = emplacementDernierePiece, caseCouranteDroite = emplacementDernierePiece;
 
 		while (cpt < 4 && (continuerParcoursGauche || continuerParcoursDroite)) { // Il est possible qu'on arrête un parcours diagonale
 																			// si on croise la pièce du joueur adversaire
-			caseCouranteGauche -= NBCOLONNES-1; // case suivante diagonale haut-gauche
+			caseCouranteGauche -= NBCOLONNES+1; // case suivante diagonale haut-gauche
 			caseCouranteDroite += NBCOLONNES+1; // case suivante diagonale bas-droit
+
+			// -------------->  CHANGEMENT ICI, c'était caseCouranteGauche -= NBCOLONNES-1,
+			// ce qui fait caseCouranteGauche = caseCouranteGauche - 6 -> faux
 
 			if (continuerParcoursGauche) {
 				if (nbDiagonalesGaucheAFaire <= 0) { // Il n'y a plus de case en diagonale haut-gauche possible
@@ -137,7 +163,7 @@ public class Grid {
 		return cpt==4;
 	}
 
-		public boolean analyseDiagonaleMontante(int joueur, int empCase) {
+		public boolean analyseDiagonaleMontante(int joueur) {
 		int cpt = 1;
 
 		// Cases accessibles en diagonale en allant vers le haut-gauche
@@ -145,16 +171,19 @@ public class Grid {
 
 		// Minimum entre le nombre de lignes restantes (vers le bas ou vers le haut)
 		// et le nombre de colonnes restantes (vers la gauche ou vers la droite)
-		int nbDiagonalesDroiteAFaire = Math.min(empCase/NBCOLONNES, NBCOLONNES-(empCase%NBCOLONNES)-1); 
-		int nbDiagonalesGaucheAFaire = Math.min(NBLIGNES-(empCase/NBCOLONNES)-1, empCase%NBCOLONNES); 
+		int nbDiagonalesDroiteAFaire = Math.min(emplacementDernierePiece/NBCOLONNES, NBCOLONNES-(emplacementDernierePiece%NBCOLONNES)-1); 
+		int nbDiagonalesGaucheAFaire = Math.min(NBLIGNES-(emplacementDernierePiece/NBCOLONNES)-1, emplacementDernierePiece%NBCOLONNES); 
 
 		boolean continuerParcoursGauche = true, continuerParcoursDroite = true;
-		int caseCouranteGauche = empCase, caseCouranteDroite = empCase;
+		int caseCouranteGauche = emplacementDernierePiece, caseCouranteDroite = emplacementDernierePiece;
 
 		while (cpt < 4 && (continuerParcoursGauche || continuerParcoursDroite)) { // Il est possible qu'on arrête un parcours diagonale
 																			// si on croise la pièce du joueur adversaire
 			caseCouranteGauche += NBCOLONNES-1; // case suivante diagonale bas-gauche
-			caseCouranteDroite -= NBCOLONNES+1; // case suivante diagonale haut-droit
+			caseCouranteDroite -= NBCOLONNES-1; // case suivante diagonale haut-droit
+
+			// ------------> CHANGEMENT ICI, c'était caseCouranteDroite += NBCOLONNES+1, 
+			// ce qui fait caseCouranteDroite = caseCouranteDroite + 8 -> faux
 
 			if (continuerParcoursGauche) {
 				if (nbDiagonalesGaucheAFaire <= 0) { // Il n'y a plus de case en diagonale haut-gauche possible
@@ -199,6 +228,20 @@ public class Grid {
 			}
 		}
 		return builder.toString();
+	}
+
+	public ArrayList<Grille> getSuccesseurs(int joueur) {
+		ArrayList<Grille> list = new ArrayList<>();
+
+		for (int i=0; i<NBCOLONNES; i++) {
+			Grille newGrille = new Grille(this);
+			int derniereCaseJouee = newGrille.jouerCoup(joueur, i);
+			if (derniereCaseJouee != -1) {
+				list.add(newGrille);
+			}
+		}
+
+		return list;
 	}
 
 }
