@@ -115,7 +115,9 @@ public class Jeu {
 			n = n.getEnfantAleatoire();
 		}
 
-		int resultatPartie = (n.getJoueur() == 1) ? 1 : 0;
+		int resultatPartie = (n.getJoueur() == 1 && n.getEtat().getNbDePieces()!=Grille.getNbColonnes()*Grille.getNbLignes()) ? 1 : 0;
+		// CHANGEMENT ICI, si le joueur qui est arrivé à l'état courant est le joueur 1 (ordi), alors le joueur 1 a gagné
+			// si c'est le joueur 2 ou que le plateau est rempli, alors le joueur 1 a perdu ou fait égalité
 		return resultatPartie;
 	}
 }
