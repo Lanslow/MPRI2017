@@ -3,7 +3,6 @@ import java.util.ArrayList;
 public class Jeu {
 	private Grille grilleActuelle;
 	private int joueurActuel;
-	private int nbDePieces = 0;
 
 	public Jeu(){
 		grilleActuelle=new Grille();
@@ -20,13 +19,7 @@ public class Jeu {
 	}
 
 	public int jouerCoup(int colonne){
-		int emplacementDernierePiece = this.grilleActuelle.jouerCoup(joueurActuel,colonne);
-
-		if (emplacementDernierePiece != -1) {
-			nbDePieces++;
-		}
-
-		return emplacementDernierePiece;
+		return this.grilleActuelle.jouerCoup(joueurActuel,colonne);
 	}
 
 	public void changementJoueur() {
@@ -34,7 +27,7 @@ public class Jeu {
 	}
 
 	public int joueurGagnant() {
-		if (nbDePieces==(Grille.getNbColonnes()*Grille.getNbLignes()))
+		if (grilleActuelle.getNbDePieces()==(Grille.getNbColonnes()*Grille.getNbLignes()))
 			return 0;
 
 		return joueurActuel;
@@ -43,7 +36,7 @@ public class Jeu {
 	public boolean estFinal() {
 		boolean res = false;
 
-		if (nbDePieces > 6) { // au moins 7 cases ont jouées (ex : le premier joueur gagne au bout de son 4ème coup, cela fait donc 7 coups)
+		if (grilleActuelle.getNbDePieces() > 6) { // au moins 7 cases ont jouées (ex : le premier joueur gagne au bout de son 4ème coup, cela fait donc 7 coups)
 			res = grilleActuelle.estFinal(joueurActuel);
 		}
 

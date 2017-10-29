@@ -92,12 +92,12 @@ public class Noeud {
 		float bValeurEnfantCourant;
 
 		for (Noeud n : enfants) {
-			float a = (n.getNbSimulations()==0) ? 0 : (float)n.getNbVictoires() / (float)n.getNbSimulations();
+			float a = (n.getNbSimulations()==0 || n.getNbVictoires()==0) ? 0 : (float)n.getNbVictoires() / (float)n.getNbSimulations();
 			if (joueur == 2) {
 				a *= -1;
 			}
 
-			float b = (n.getNbSimulations()==0) ? 0 : (float)((Math.sqrt(2)*Math.sqrt(Math.log(nb_simulations) / n.getNbSimulations())));
+			float b = (n.getNbSimulations()==0 || nb_simulations==0) ? 0 : (float)((Math.sqrt(2)*Math.sqrt(Math.log(nb_simulations) / n.getNbSimulations())));
 
 			bValeurEnfantCourant = a + b;
 
@@ -114,7 +114,6 @@ public class Noeud {
 		Noeud res = null;
 
 		if (enfants.size() == 0) {
-			//int joueurCourant = (estRacine()) ? 1 : parent.getJoueur();
 			// getSuccesseurs nécessite le joueur actuel qui doit jouer, donc on récupère le joueur qui avait jouer pour arriver au parent
 			for (Grille g : etat.getSuccesseurs(((joueur-1)^1)+1)) { // <------- CHANGEMENT ICI,
 																		// on veut les successeurs du joueur 
@@ -186,7 +185,7 @@ public class Noeud {
 
 		builder.append("Caractéristiques : \n");
 		builder.append("Joueur ayant joué avant : " + joueur + ", coup ayant été joué avant : " + coup + ", nb de victoires : " + nb_victoires
-			 + ", nb de simulations : " + nb_simulations + "\n");
+			 + ", nb de simulations : " + nb_simulations + ", nb d'enfants : " + enfants.size() + "\n");
 
 		if (parent != null) 
 			builder.append("Fils\n");

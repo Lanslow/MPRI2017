@@ -6,6 +6,8 @@ public class Grille {
 	final private static int NBCOLONNES = 7;
 	final private static int NBLIGNES = 6;
 
+	private int nbDePieces = 0; // <----------- CHANGEMENT ICI, nbDePieces était dans la classe Jeu avant
+											// Maintenant elle est ici pour estFinal() (voir changement estFinal())
 	private int emplacementDernierePiece = -1;
 
 	public static int getNbColonnes() {
@@ -35,6 +37,7 @@ public class Grille {
 			this.pieces[i] = g.getPiece(i);
 		}
 		emplacementDernierePiece = g.getEmplacementDernierePiece();
+		nbDePieces = g.getNbDePieces();
 	}
 
 	public int getPiece(int i) {
@@ -49,6 +52,10 @@ public class Grille {
 		return emplacementDernierePiece;
 	}
 
+	public int getNbDePieces() {
+		return nbDePieces;
+	}
+	
 	/**
 	* joueur est le joueur qui joue ( 1 ou 2 )
 	* colonne est l'entier qui représente la colonne joué (1,2,3,4,5,6,7) - 1 (pour le tableau)
@@ -64,6 +71,7 @@ public class Grille {
 			valeur = colonne+((i-1)*NBCOLONNES);
 			pieces[valeur] = joueur;
 			emplacementDernierePiece = valeur;
+			nbDePieces++;
 		}
 		
 		return valeur;
@@ -72,8 +80,10 @@ public class Grille {
 	/**
 	* emplacementDernierePiece permet de ne regarder que autour du dernier jeton joué, au lieu de toute la grille
 	*/
-	public boolean estFinal(int joueur){
-		return analyseVerticale(joueur) || analyseHorizontale(joueur) || analyseDiagonaleDescendante(joueur) || analyseDiagonaleMontante(joueur);
+	public boolean estFinal(int joueur){ // <------- CHANGEMENT ICI, il faut vérifier s'il y a égalité 
+												// -> Aucun joueur n'a aligné 4 pièces, et il ne reste plus de place sur
+												// le plateau
+		return nbDePieces==NBLIGNES*NBCOLONNES || analyseVerticale(joueur) || analyseHorizontale(joueur) || analyseDiagonaleDescendante(joueur) || analyseDiagonaleMontante(joueur);
 	}
 	public boolean analyseVerticale(int joueur){
 		int caseCourante = emplacementDernierePiece+NBCOLONNES;
