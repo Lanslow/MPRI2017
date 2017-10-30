@@ -47,7 +47,8 @@ public class Jeu {
 		return grilleActuelle.getSuccesseurs(joueurActuel);
 	}
 
-	public void ordi_joue_mcts(int tempsMax) {
+	public void ordi_joue_mcts(int tempsMax, int joueur) { // -------> CHANGEMENT ICI, on lance MCTS en fonction du
+																// joueur
 		long start = System.currentTimeMillis();
 		long tempsCourant = start;
 
@@ -61,7 +62,7 @@ public class Jeu {
 		do {
 
 			// noeud n'ayant pas d'enfant développés en passant par les noeuds de plus grande B-valeur
-			courant = selection(courant);
+			courant = selection(courant, joueur);
 			if (!courant.estFinal()) {
 				// enfant choisi aléatoirement
 				courant = developpement(courant);
@@ -74,16 +75,16 @@ public class Jeu {
 			tempsCourant = System.currentTimeMillis()-start;
 		} while (tempsCourant/1000 < tempsMax);
 
-		int meilleurCoup = courant.getPlusGrandeBValeur().getCoup();
+		int meilleurCoup = courant.getPlusGrandeBValeur(joueur).getCoup();
 
 		grilleActuelle.jouerCoup(joueurActuel, meilleurCoup/Grille.getNbColonnes());
 	}
 
-	public Noeud selection(Noeud courant) {
+	public Noeud selection(Noeud courant, int j) {
 		if (courant.estFinal() || courant.getNbEnfants() == 0)
 			return courant;
 
-		return selection(courant.getPlusGrandeBValeur());
+		return selection(courant.getPlusGrandeBValeur(j), j);
 	}
 
 	public Noeud developpement(Noeud courant) {

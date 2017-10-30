@@ -233,7 +233,7 @@ public class Main{
 					}
 				}
 			} else { // C'est à la machine de jouer
-				g.ordi_joue_mcts(5);
+				g.ordi_joue_mcts(5, 1);
 				System.out.println(g.toString());
 
 				if (g.estFinal()) {

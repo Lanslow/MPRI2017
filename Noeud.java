@@ -85,7 +85,7 @@ public class Noeud {
 		return parent;
 	}
 
-	public Noeud getPlusGrandeBValeur() {
+	public Noeud getPlusGrandeBValeur(int j) {
 		Noeud noeudSelectionne = null;
 
 		float bValeurMax = Float.NEGATIVE_INFINITY;
@@ -93,7 +93,9 @@ public class Noeud {
 
 		for (Noeud n : enfants) {
 			float a = (n.getNbSimulations()==0 || n.getNbVictoires()==0) ? 0 : (float)n.getNbVictoires() / (float)n.getNbSimulations();
-			if (joueur == 2) {
+			// CHANGEMENT ICI, si le joueur qui a joué pour arriver à cet état est le joueur qui a lancé MCTS,
+				// alors coefficient -1 à mu
+			if (joueur == j) {
 				a *= -1;
 			}
 
